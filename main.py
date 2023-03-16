@@ -16,13 +16,13 @@ class Page:
         search = response.text
         myjson_string = re.findall(pattern, search)[0]
         my_json = json.loads(myjson_string)
-        # print(my_json)
+        print(my_json)
         
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         qselect = "SELECT name, price, discount, quantity FROM macbook WHERE name=?"
         qinsert = "INSERT INTO macbook VALUES (?, ?, ?, ?)"
-        qupdate = "UPDATE macbook SET price=?, discount=? WHERE name=?"
+        qupdate = "UPDATE macbook SET price=?, discount=?, quantity=? WHERE name=?"
         for key in my_json:
             # print(key)
             name = my_json[key]["NAME"]
@@ -33,7 +33,7 @@ class Page:
             discount = int(my_json[key]["DISCOUNT"])
             fetch = cursor.execute(qselect, (name,)).fetchone()
             if fetch[1] != price or fetch[2] != discount or fetch[3] != quantity:
-                cursor.execute(qupdate, (price, discount, name))
+                cursor.execute(qupdate, (price, discount, quantity, name))
                 self.is_updated = True
             else:
                 cursor.execute(qinsert, (name, price, discount, quantity))
