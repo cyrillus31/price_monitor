@@ -9,8 +9,8 @@ Restart=always
 [Service]
 Type=simple
 WorkingDirectory=/home/kirill/PythonProjects/price_monitor/
-Environment="PRICE_MONITOR_TELEBOT_TOKEN=5886329461:AAFDkcloSuZSG-R-o0DilshoqBcBoo0eyKA"
-Environment="PRICE_MONITOR_TELEBOT_CHAT_ID=617762423"
+Environment="PRICE_MONITOR_TELEBOT_TOKEN= ++INSERT YOUR TOKEN++" 
+Environment="PRICE_MONITOR_TELEBOT_CHAT_ID= ++INSERT YOUR CHAT ID++"
 ExecStart=/home/kirill/python3-venv/bin/python3.9 /home/kirill/PythonProjects/price_monitor/main.py --start
 ExecReload=/home/kirill/python3-venv/bin/python3.9 /home/kirill/PythonProjects/price_monitor/main.py --restart
 TimeoutSec=900
