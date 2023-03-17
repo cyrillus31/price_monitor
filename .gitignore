@@ -1,3 +1,4 @@
 init.sh
 *.log
 data.db
+__pycache__
