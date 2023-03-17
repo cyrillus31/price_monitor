@@ -61,7 +61,6 @@ class Page:
             
 
 
-# os.system("source init.sh")
 TOKEN = os.getenv("PRICE_MONITOR_TELEBOT_TOKEN")
 CHAT_ID = os.getenv("PRICE_MONITOR_TELEBOT_CHAT_ID")
 
@@ -70,11 +69,13 @@ def sending_updates(token, is_updated: bool, chat_id, page: Page) -> None:
     method = "/sendMessage?chat_id={}&parse_mode=markdown&disable_notification={}&text={}".format(chat_id, str(not is_updated), page.get_table())
     r = requests.get(url+method)
     if r.status_code == 200:
-        logging.debug("success")
+        pass
+        # logging.debug("success")
         # logging.debug(r.content)
     else:
-        logging.debug("a problem occured", r.status_code)
-        logging.debug(r.content)
+        pass
+        # logging.debug("a problem occured", r.status_code)
+        # logging.debug(r.content)
 
 
 

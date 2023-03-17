@@ -1,0 +1,22 @@
+[Unit]
+Description=price monitoring telegram bot
+Afte=rnetwork.target
+Requires=network.target
+StartLimitIntervalSec=3600
+StartLimitBurst=12
+Restart=always
+
+[Service]
+Type=simple
+WorkingDirectory=/home/kirill/PythonProjects/price_monitor/
+Environment="PRICE_MONITOR_TELEBOT_TOKEN=5886329461:AAFDkcloSuZSG-R-o0DilshoqBcBoo0eyKA"
+Environment="PRICE_MONITOR_TELEBOT_CHAT_ID=617762423"
+ExecStart=/home/kirill/python3-venv/bin/python3.9 /home/kirill/PythonProjects/price_monitor/main.py --start
+ExecReload=/home/kirill/python3-venv/bin/python3.9 /home/kirill/PythonProjects/price_monitor/main.py --restart
+TimeoutSec=900
+Restart=always
+RestartSec=300
+
+[Install]
+WantedBy=multi-user.target
+
