@@ -1,4 +1,5 @@
 init.sh
 *.log
 data.db
-__pycache__
+__pycache__/
+deletethis.py

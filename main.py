@@ -1,4 +1,4 @@
-import requests, bs4, re, json, time, os, logging
+import requests, bs4, re, json, time, os, logging, io
 from datetime import datetime as dt
 import sqlite3
 import db
@@ -64,9 +64,9 @@ class Page:
 TOKEN = os.getenv("PRICE_MONITOR_TELEBOT_TOKEN")
 CHAT_ID = os.getenv("PRICE_MONITOR_TELEBOT_CHAT_ID")
 
-def sending_updates(token, is_updated: bool, chat_id, page: Page) -> None:
+def sending_updates(token, is_updated: bool, chat_id, message: str) -> None:
     url = "https://api.telegram.org/bot" + token
-    method = "/sendMessage?chat_id={}&parse_mode=markdown&disable_notification={}&text={}".format(chat_id, str(not is_updated), page.get_table())
+    method = "/sendMessage?chat_id={}&parse_mode=markdown&disable_notification={}&text={}".format(chat_id, str(not is_updated), message)
     r = requests.get(url+method)
     if r.status_code == 200:
         pass
@@ -77,15 +77,44 @@ def sending_updates(token, is_updated: bool, chat_id, page: Page) -> None:
         # logging.debug("a problem occured", r.status_code)
         # logging.debug(r.content)
 
+def check(t1, t2) -> str:
+    linenumber = 0
+    rows1 = {}
+    difference = "" 
+
+    for row in t1.readlines():
+        linenumber += 1
+        rows1[linenumber] = row
+        
+    linenumber = 0
+    rows2 = {}
+    for row in t2.readlines():
+        linenumber += 1
+        rows2[linenumber] = row
+
+    for linenumber in rows1:
+        if rows1[linenumber] == rows2[linenumber]:
+            continue
+        else:
+            difference += (rows1[linenumber]+rows2[linenumber]+"\n")
+    return difference
 
 
 if __name__ == "__main__":
     # url = input("Enter url to search")
     url = "https://wishmaster.me/catalog/?s=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8&q=macbook+air"
     my_search = Page(url)
+    my_tuple = ("",) 
     while True:
         my_search.update_database()
-        sending_updates(TOKEN, my_search.is_updated, CHAT_ID, my_search)
+        message = my_search.get_table()
+        sending_updates(TOKEN, my_search.is_updated, CHAT_ID, message)
+        if message == my_tuple[0]:
+            sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "NO CHANGES")
+        else:
+            sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "THE DIFFERECE:\n"check(io.StringIO(my_tuple[0]), io.StringIO(message)))
+            my_tuple[0] = message
+
         my_search.is_updated = False
         time.sleep(1500)
     
