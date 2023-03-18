@@ -51,9 +51,9 @@ class Page:
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
 
-        get_table = "SELECT name, price, discount, quantity FROM macbook WHERE price<150000 AND quantity>0 ORDER BY price ASC"
+        get_table = "SELECT name, price, discount, quantity FROM macbook WHERE price<150000 AND quantity>0 ORDER BY name ASC"
         all_rows = cursor.execute(get_table).fetchall()
-        message = str(dt.now()) + "\n" 
+        message = "" 
         for row in all_rows:
             message += "{}\n*PRICE: {} руб.    DISCOUNT: {}     QUANTITY: {}*\n\n".format(row[0], str(row[1]), str(row[2]), str(row[3]))
         # logging.debug(message)
@@ -104,16 +104,17 @@ if __name__ == "__main__":
     # url = input("Enter url to search")
     url = "https://wishmaster.me/catalog/?s=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8&q=macbook+air"
     my_search = Page(url)
-    my_tuple = ("",) 
     while True:
+        current_time = str(dt.now()) + "\n"
+        prev_message = my_search.get_table()
         my_search.update_database()
         message = my_search.get_table()
-        sending_updates(TOKEN, my_search.is_updated, CHAT_ID, message)
-        if message == my_tuple[0]:
+        sending_updates(TOKEN, my_search.is_updated, CHAT_ID, current_time+message)
+        if message == prev_message:
             sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "NO CHANGES")
         else:
-            sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "THE DIFFERENCE:\n"+check(io.StringIO(my_tuple[0]), io.StringIO(message)))
-            my_tuple[0] = message
+            sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "THE DIFFERENCE:\n"+check(io.StringIO(prev_message), io.StringIO(message)))
+            prev_message = message
 
         my_search.is_updated = False
         time.sleep(1500)
