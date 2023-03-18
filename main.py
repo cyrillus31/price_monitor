@@ -112,7 +112,7 @@ if __name__ == "__main__":
         if message == my_tuple[0]:
             sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "NO CHANGES")
         else:
-            sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "THE DIFFERECE:\n"check(io.StringIO(my_tuple[0]), io.StringIO(message)))
+            sending_updates(TOKEN, my_search.is_updated, CHAT_ID, "THE DIFFERENCE:\n"+check(io.StringIO(my_tuple[0]), io.StringIO(message)))
             my_tuple[0] = message
 
         my_search.is_updated = False
